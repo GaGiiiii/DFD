@@ -1,0 +1,53 @@
+<div class="container-fluid container-max-width mt-5">
+  <div class="row" id="row-for-movie-cards">
+
+      <div class="col-md-8 col-sm-6 offset-md-2 offset-sm-6 card mb-3 mt-3">
+        {{#if updatedMovie}}
+          <div class="alert alert-success mb-5">{{updatedMovie}}</div>
+        {{/if}}
+        <div class="card-border">
+          <h3 class="card-header">{{movie.name}}</h3>
+          <div class="card-body">
+            {{!-- <h5 class="card-title">Special title treatment</h5> --}}
+            {{!-- <h6 class="card-subtitle text-muted">Support card subtitle</h6> --}}
+          </div>
+          <img style="height: 500px; width: 100%; display: block;" src="{{movie.image}}" alt="Card image">
+          <div class="card-body">
+            <p class="card-text">{{movie.description}}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Cras justo odio</li>
+            <li class="list-group-item">Dapibus ac facilisis in</li>
+            <li class="list-group-item">Vestibulum at eros</li>
+          </ul>
+          <div class="card-body">
+            <a href="/movie/update/{{movie._id}}" class="card-link btn btn-warning">Edit</a>
+            <button data-toggle="modal" data-target="#deleteModal" class="card-link btn btn-danger">Delete</button>
+          </div>
+          <div class="card-footer text-muted" id="dateID">
+            {{movie.created_at}}
+          </div>
+        </div>
+      </div>
+
+  </div>
+</div> 
+
+<div class="modal" id="deleteModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Are You Sure That You Want To Delete Movie <strong>"{{movie.name}}"</strong></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <form action="/movie/delete/{{movie._id}}" method="POST">
+          <button type="submit" class="card-link btn btn-danger">Yes</button>
+        </form> 
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>

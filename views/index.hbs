@@ -1,0 +1,47 @@
+{{#if createdMovie}}
+  <div class="container-fluid mt-5">
+    <div class="alert alert-success">{{createdMovie}}</div>
+  </div>
+{{/if}}
+
+{{#if deletedMovie}}
+  <div class="container-fluid mt-5">
+    <div class="alert alert-success">{{deletedMovie}}</div>
+  </div>
+{{/if}}
+
+<div class="container-fluid container-max-width mt-5">
+  <div class="row" id="row-for-movie-cards">
+
+    {{#each movies}}
+
+      <div class="col-md-4 col-sm-6 card mb-3 mt-3">
+        <div class="card-border">
+          <a href="/movie/{{this._id}}" class="card-header-link">
+            <h3 class="card-header">{{this.name}}</h3>
+          </a>
+          <div class="card-body">
+            {{!-- <h5 class="card-title">Special title treatment</h5> --}}
+            {{!-- <h6 class="card-subtitle text-muted">Support card subtitle</h6> --}}
+          </div>
+          <a href="/movie/{{this._id}}">
+            <img style="height: 500px; width: 100%; display: block;" src="{{this.image}}" alt="Card image">
+          </a>
+          <div class="card-body">
+            <p class="card-text">{{this.description}}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Cras justo odio</li>
+            <li class="list-group-item">Dapibus ac facilisis in</li>
+            <li class="list-group-item">Vestibulum at eros</li>
+          </ul>
+          <div class="card-footer text-muted" style="margin-top: 1rem;">
+            {{this.created_at}}
+          </div>
+        </div>
+      </div>
+
+    {{/each}}
+
+  </div>
+</div>

@@ -1,0 +1,31 @@
+#body-container{
+  background-color: #fff;
+  margin-top: 25px;
+  padding: 20px;
+}
+
+.card{
+  border: none;
+}
+
+.card-border{
+  border: 2px solid #333;
+  border-radius: 5px 5px 5px 5px/25px 25px 25px 5px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+a.card-header-link{
+  text-decoration: none;
+}
+
+a.card-header-link:hover{
+  text-decoration: underline;
+}
+
+@media only screen and (min-width: 1600px){
+  .container-max-width{
+    max-width: 80%;
+  }
+}
+
