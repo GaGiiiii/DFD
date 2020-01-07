@@ -6,6 +6,11 @@
           <div class="alert alert-success mb-5">{{updatedMovie}}</div>
         {{/if}}
         <div class="card-border">
+
+          {{#if notAuthorized}}
+              <div class="alert alert-danger mt-3">{{notAuthorized}}</div>
+          {{/if}}
+
           <h3 class="card-header">{{movie.name}}</h3>
           <div class="card-body">
             {{!-- <h5 class="card-title">Special title treatment</h5> --}}
@@ -14,16 +19,16 @@
           <img style="height: 500px; width: 100%; display: block;" src="{{movie.image}}" alt="Card image">
           <div class="card-body">
             <p class="card-text">{{movie.description}}</p>
+            <br>Author:  <a href="/users/{{user._id}}">{{user.username}}</a> 
           </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Vestibulum at eros</li>
-          </ul>
-          <div class="card-body">
-            <a href="/movie/update/{{movie._id}}" class="card-link btn btn-warning">Edit</a>
-            <button data-toggle="modal" data-target="#deleteModal" class="card-link btn btn-danger">Delete</button>
-          </div>
+          {{#if loggedInUser}}
+            {{#if correctUser}}
+              <div class="card-body">
+                <a href="/movie/update/{{movie._id}}" class="card-link btn btn-warning">Edit</a>
+                <button data-toggle="modal" data-target="#deleteModal" class="card-link btn btn-danger">Delete</button>
+              </div>
+            {{/if}}
+          {{/if}}
           <div class="card-footer text-muted" id="dateID">
             {{movie.created_at}}
           </div>

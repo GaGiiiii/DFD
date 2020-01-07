@@ -1,4 +1,5 @@
 const MovieModel = require('../models/movie.model');
+const UserModel = require('../models/user.model');
 
 // Operations
 
@@ -11,10 +12,15 @@ exports.getAll = function (req, res) {
         layout: 'main',
         createdMovie: req.flash('createdMovie'),
         deletedMovie: req.flash('deletedMovie'),
+        userRegistered: req.flash('userRegistered'),
+        userLoggedOut: req.flash('userLoggedOut'),
+        alreadyLoggedIn: req.flash('alreadyLoggedIn'),
+        message: req.flash('error'),
+        success: req.flash('success'),
         movies: movies,
       });
     }
-  });
+  }).populate('author');
 };
 
 exports.createView = (req, res) => {
@@ -29,11 +35,23 @@ exports.create = (req, res, next) => {
   let movie = new MovieModel({
     name: req.body.name,
     description: req.body.description,
-    image: req.body.image
+    image: req.body.image,
+    author: req.user._id
   });
+
+  
 
   movie.save((error) => {
     if(!error){
+
+      UserModel.findById(movie.author, (error, user) => {
+        if(error)
+          return next(error);
+    
+        user.movies.push(movie._id);
+        user.save();    
+      });
+
       req.flash('createdMovie', 'Movie "' + req.body.name + '" Successfully Suggested.')
       res.redirect('/');
     }else{
@@ -51,17 +69,38 @@ exports.create = (req, res, next) => {
 };
 
 exports.read = (req, res, next) => {
+  let correctUser = false;
   // res.send('Read Movie.');
   MovieModel.findById(req.params.id, (error, movie) => {
+
     if(error){
       return next(error);
     }
 
-    res.render('movie/read' , {
-      layout: 'main',
-      movie: movie,
-      updatedMovie: req.flash('updatedMovie'),
+    UserModel.findById(movie.author, (error, user) => {
+      if(error)
+        return next(error);
+
+
+      // console.log("REQ: " + req.user);
+      // console.log("U: " + user);
+      
+      if(req.user && user && String(req.user._id) == String(user._id)){
+        correctUser = true
+        // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
+      }
+
+      // console.log(correctUser)
+      res.render('movie/read' , {
+        layout: 'main',
+        movie: movie,
+        updatedMovie: req.flash('updatedMovie'),
+        notAuthorized: req.flash('notAuthorized'),
+        user: user,
+        correctUser: correctUser
+      });
     });
+
   });
 };
 
@@ -71,12 +110,27 @@ exports.updateView = (req, res, next) => {
       return next(error);
     }
 
-    res.render('movie/createORupdate', {
-      title: 'Update Movie "' + movie.name + '".',
-      layout: 'main',
-      movie: movie,
-      updating: true
-    });
+    // console.log("\n\n\nMOVIE: " + movie.author + ".");
+    // console.log("AUTHOR: " + req.user._id + ".\n\n\n\n");
+
+    let omg1 = String (movie.author);
+    let omg2 = String(req.user._id);
+
+    if(omg1 == omg2){
+      // console.log("DSADSADAS");
+    }
+
+    if(omg1 != omg2){
+      req.flash('notAuthorized', 'Not Authorized.');
+      res.redirect('/movie/' + movie._id);
+    }else{
+      res.render('movie/createORupdate', {
+        title: 'Update Movie "' + movie.name + '".',
+        layout: 'main',
+        movie: movie,
+        updating: true,
+      });
+    }
   });
 };
 
