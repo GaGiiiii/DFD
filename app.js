@@ -74,7 +74,7 @@ app.use("/", movieRoutes);
 app.use('/', userRoutes);
 
 // Server Start
-let portNumber = 3000;
+let portNumber = process.env.PORT || 3000;
 
 app.listen(portNumber, () => {
     console.log("*** Server is running on port: " + portNumber);
