@@ -5,6 +5,11 @@
         {{#if updatedMovie}}
           <div class="alert alert-success mb-5">{{updatedMovie}}</div>
         {{/if}}
+
+        {{#if createdComment}}
+          <div class="alert alert-success mb-5">{{createdComment}}</div>
+        {{/if}}
+
         <div class="card-border">
 
           {{#if notAuthorized}}
@@ -56,3 +61,84 @@
     </div>
   </div>
 </div>
+
+
+
+
+<div class="container">
+	<h2 class="text-center">Bootstrap 4 User Rating Form / Comment Form</h2>
+	
+	<div class="card">
+	    <div class="card-body">
+	        <div class="row">
+        	    <div class="col-md-2">
+        	        <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid"/>
+        	        <p class="text-secondary text-center">15 Minutes Ago</p>
+        	    </div>
+        	    <div class="col-md-10">
+        	        <p>
+        	            <a class="float-left" href="https://maniruzzaman-akash.blogspot.com/p/contact.html"><strong>Maniruzzaman Akash</strong></a>
+        	            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                        <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+        	            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+        	            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+
+        	       </p>
+        	       <div class="clearfix"></div>
+        	        <p>Lorem Ipsum is simply dummy text of the pr make  but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        	        <p>
+        	            <a class="float-right btn btn-outline-primary ml-2"> <i class="fa fa-reply"></i> Reply</a>
+        	            <a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a>
+        	       </p>
+        	    </div>
+	        </div>
+	    </div>
+	</div>
+
+
+          <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add new comment
+          </a>
+
+
+<!--Collapse Add a comment form START-->
+        <div class="collapse" id="collapseComment">
+          <div class="well">
+              {{#unless loggedInUser}}
+            <!--If the user is not logged in, direct him to the login page-->
+            <h5>You need to login before you can comment. <a href="/login">Click here</a> to go to the login page.</h5>
+              {{/unless}}
+               {{#if loggedInUser}}
+            <!--If the user is logged in, show the new comment form-->
+            <h4>Write your comment <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
+            <form action="/comments/create" method="POST">
+              <div class="form-group">
+                <input class="form-control" type="text" disabled value="User: {{loggedInUser.username}}">
+              </div>
+              <div class="form-group">
+                <div class="error-input" id="missing-comment-error">
+                  <?php 
+                    if($missingComment){ ?>
+                      <i class="fa fa-times-circle"></i>
+                      <?php writeMessage("Comment field is required.");
+                    }
+                  ?>
+                </div>
+                <textarea class="form-control" name="commentBody" placeholder="Write your comment..." rows="5" cols="70"></textarea>
+              </div>
+              <input type="hidden" name="movieID" value="{{movie._id}}">
+              <div class="form-group">
+                <button type="submit" name="addcoment" class="btn btn-success">Submit <span class="glyphicon glyphicon-comment" aria-hidden="true"></span></button>
+              </div>
+            </form>
+               {{/if}}
+          </div>
+        </div>
+        <!--Collapse Add a comment form END-->
+
+
+  <br><br>
+
+
+</div>
+

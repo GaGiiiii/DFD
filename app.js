@@ -17,6 +17,8 @@ const app = express();
 // Imports Routes For The Movies
 const movieRoutes = require('./routes/movie.route');
 const userRoutes = require('./routes/user.route');
+const commentRoutes = require('./routes/comment.route');
+
 
 // Set Up Mongoose Connection
 let dev_db_url = config.database;
@@ -72,6 +74,7 @@ app.get('*', (req, res, next) => {
 
 app.use("/", movieRoutes);
 app.use('/', userRoutes);
+app.use('/', commentRoutes);
 
 // Server Start
 let portNumber = process.env.PORT || 3000;

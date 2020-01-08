@@ -96,6 +96,7 @@ exports.read = (req, res, next) => {
         movie: movie,
         updatedMovie: req.flash('updatedMovie'),
         notAuthorized: req.flash('notAuthorized'),
+        createdComment: req.flash('createdComment'),
         user: user,
         correctUser: correctUser
       });

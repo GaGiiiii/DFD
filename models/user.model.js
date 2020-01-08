@@ -14,7 +14,7 @@ let userSchema = new Schema({
       // validate: [validateEmail, 'Please fill a valid email address'],
       match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please Enter a Valid Email']
     },
-    password: { // TODO
+    password: {
       type: String,
       required: [true, "Password Field Is Required"]
     },
@@ -25,16 +25,11 @@ let userSchema = new Schema({
     movies: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'MovieModel'
+    }],
+    comments: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CommentModel'
     }]
-    /*likes{
-
-    },
-    dislikes{
-
-    },
-    comments{
-
-    }*/
 });
 
 // let validateEmail = (email) => {

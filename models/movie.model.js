@@ -24,7 +24,11 @@ let movieSchema = new Schema({
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'UserModel'
-    }
+    },
+    comments: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CommentModel'
+    }]
     /*likes{
 
     },
