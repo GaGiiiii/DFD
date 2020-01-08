@@ -10,7 +10,17 @@
         <br>Movies That "{{user.username}}" Suggested: <br>
 
         {{#each user.movies}}
-          &nbsp; &nbsp; &bull; &nbsp;{{this.name}} <br>
+          <a href="/movie/{{this._id}}" style="text-decoration: none;">&nbsp; &nbsp; &bull; &nbsp;{{this.name}}</a><br>
+        {{/each}}
+      
+      {{/if}}
+
+      {{#if user.comments}}
+
+        <br>Comments By "{{user.username}}": <br>
+
+        {{#each user.comments}}
+          <a href="/movie/{{this.movie}}" style="text-decoration: none;">&nbsp; &nbsp; &bull; &nbsp;{{this.body}}</a><br>
         {{/each}}
       
       {{/if}}

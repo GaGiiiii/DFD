@@ -110,9 +110,7 @@ exports.profileView = (req, res, next) => {
       layout: 'main',
       user: user,
     });
-  }).populate('movies').exec((error, user) => {
-    // console.log(user);
-  });
+  }).populate('movies').populate('comments');
 };
 
 function handleValidationErrors(error, body, confirmPasswordError){

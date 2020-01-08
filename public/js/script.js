@@ -42,3 +42,30 @@
 // }
 
 // dateDIV.innerHTML = text;
+
+const form = document.querySelector('#add-new-comment-form');
+
+
+function validateNewCommentForm(event){
+
+  let error = "";
+
+  let commentTextarea = document.querySelector('#commentBodyID')
+  let commentContent = document.querySelector('#commentBodyID').value
+  let errorDiv = document.querySelector('#missing-comment-error');
+
+  if(commentContent == ""){
+    error += "Comment field is required."
+  }
+
+  if(error != ""){
+    errorDiv.innerHTML = "<i class='fa fa-times-circle'></i> " + error;
+    errorDiv.classList.add("text-danger");
+    commentTextarea.classList.add("is-invalid");
+    
+    return false;
+  }else{
+
+    return true;
+  }
+}

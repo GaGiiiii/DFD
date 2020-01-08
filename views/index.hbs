@@ -59,9 +59,10 @@
             </a>
             <div class="card-body">
               <p class="card-text">{{this.description}}</p>
-              Suggested By: <a href="/users/{{this.author._id}}">{{this.author.username}}</a> 
+              <i class="far fa-user"></i> Suggested By: <a href="/users/{{this.author._id}}">{{this.author.username}}</a> 
+              <br><i class="far fa-comments"></i> Comments: {{this.comments.length}}
             </div>
-            <div class="card-footer text-muted" style="margin-top: 1rem;">
+            <div class="card-footer text-muted" style="margin-top: .5rem;">
               {{this.created_at}}
             </div>
           </div>
