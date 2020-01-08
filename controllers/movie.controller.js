@@ -1,5 +1,7 @@
 const MovieModel = require('../models/movie.model');
 const UserModel = require('../models/user.model');
+const CommentModel = require('../models/comment.model');
+
 
 // Operations
 
@@ -90,6 +92,10 @@ exports.read = (req, res, next) => {
         // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
       }
 
+      // CommentModel.find((error, comments) => {
+
+      // })
+
       // console.log(correctUser)
       res.render('movie/read' , {
         layout: 'main',
@@ -102,6 +108,12 @@ exports.read = (req, res, next) => {
       });
     });
 
+  }).populate({
+    path: 'comments',
+    populate:{
+      path: 'author',
+      model: 'UserModel'
+    }
   });
 };
 
