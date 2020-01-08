@@ -19,6 +19,17 @@
 
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
+      {{#if userLel}}
+        <li class="nav-item">
+          <a class="nav-link" href="/movie/create">Suggest New</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/{{userLel._id}}">Logged In As "{{userLel.username}}"</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+      {{/if}}  
       {{#if loggedInUser}}
       <li class="nav-item">
         <a class="nav-link" href="/movie/create">Suggest New</a>
@@ -30,12 +41,14 @@
           <a class="nav-link" href="/logout">Logout</a>
         </li>
       {{else}}
-        <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/register">Register</a>
-        </li>
+        {{#unless userLel}}
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/register">Register</a>
+          </li>
+        {{/unless}}
       {{/if}}
     </ul>
     <form class="form-inline my-2 my-lg-0">

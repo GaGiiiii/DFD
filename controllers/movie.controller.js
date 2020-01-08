@@ -61,7 +61,8 @@ exports.create = (req, res, next) => {
         handleValidationErrors(error, req.body);
         res.render("movie/createORupdate", {
           title: "Suggest New Movie",
-          movie: req.body
+          movie: req.body,
+          userLel: req.user
         });
       }
       else
