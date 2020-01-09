@@ -45,7 +45,6 @@
 
 const form = document.querySelector('#add-new-comment-form');
 
-
 function validateNewCommentForm(event){
 
   let error = "";
@@ -68,4 +67,31 @@ function validateNewCommentForm(event){
 
     return true;
   }
+}
+
+function validateEditCommentForm(form){
+
+  let commentID = form.getAttribute('name');
+  // console.log(form.getAttribute('name'));
+  
+  let error = "";
+
+  let commentTextarea = document.querySelector('#commentBodyEditID' + String(commentID));
+  let commentContent = commentTextarea.value
+  let errorDiv = document.querySelector('#missing-edit-comment-error' + String(commentID));
+
+  if(commentContent == ""){
+    error += "Comment field is required."
+  }
+
+  if(error != ""){
+    errorDiv.innerHTML = "<i class='fa fa-times-circle'></i> " + error;
+    errorDiv.classList.add("text-danger");
+    commentTextarea.classList.add("is-invalid");
+    
+    return false;
+  }else{
+    return true;
+  }
+
 }

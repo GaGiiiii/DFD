@@ -54,8 +54,8 @@ app.engine('.hbs', expressHandlebars({
   // defaultLayout: 'mainLayout',
   layoutsDir: __dirname + '/views/layouts',
   helpers: {
-    ifEquals: (arg1, arg2, options) => {
-      return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+    ifEqualsString: (arg1, arg2, options) => {
+      return (String(arg1) == String(arg2)) ? options.fn(this) : options.inverse(this);
     }
   }
 }));

@@ -5,26 +5,6 @@ const MovieModel = require('../models/movie.model');
 
 // Operations
 
-exports.getAll = function (req, res) {
-  MovieModel.find((error, movies) => {
-    if(error){
-      console.log('Error | getAllMovies.' + error);
-    }else{
-      res.render('index' , {
-        layout: 'main',
-        createdMovie: req.flash('createdMovie'),
-        deletedMovie: req.flash('deletedMovie'),
-        userRegistered: req.flash('userRegistered'),
-        userLoggedOut: req.flash('userLoggedOut'),
-        alreadyLoggedIn: req.flash('alreadyLoggedIn'),
-        message: req.flash('error'),
-        success: req.flash('success'),
-        movies: movies,
-      });
-    }
-  }).populate('author');
-};
-
 exports.create = (req, res, next) => {
     // res.send("Create Comment");
   let comment = new CommentModel({
@@ -61,37 +41,51 @@ exports.create = (req, res, next) => {
 };
 
 exports.update = (req, res, next) => {
-  MovieModel.findByIdAndUpdate(req.params.id, {
-    $set: req.body
-  }, (error, movie) => {
+  CommentModel.findByIdAndUpdate(req.params.id, {
+    body: req.body.commentBodyEdit
+  }, (error, comment) => {
     if(error)
       return next(error);
     
-    req.flash('updatedMovie', 'Movie "' + req.body.name + '" Successfully Updated.')
-    res.redirect('/movie/' + req.params.id);
+    req.flash('updatedComment', 'Comment Successfully Updated.')
+    res.redirect('/movie/' + req.body.movieID);
   });
 };
 
 exports.delete = (req, res, next) => {
-  MovieModel.findByIdAndRemove(req.params.id, (error, movie) => {
+  CommentModel.findByIdAndRemove(req.params.id, (error, comment) => {
     if(error){
       return next(error);
     }
 
-    req.flash('deletedMovie', 'Movie "' + movie.name + '" Successfully Deleted.')
-    res.redirect('/');
+    UserModel.findById(comment.author, (error, user) => {
+      if(error)
+        return next(error);
+  
+        // const index = user.comments.indexOf(req.params.id);
+        // if (index > -1) {
+        //   user.comments.splice(index, 1);
+        // }
+
+      user.comments.pull({_id: req.params.id});
+      user.save();
+    });
+
+    MovieModel.findById(comment.movie, (error, movie) => {
+      if(error)
+        return next(error);
+  
+        // const index = movie.comments.indexOf(req.params.id);
+        // if (index > -1) {
+        //   movie.comments.splice(index, 1);
+        // }
+
+
+        movie.comments.pull({_id: req.params.id});
+        movie.save();  
+    });
+
+    req.flash('deletedComment', 'Comment Successfully Deleted.')
+    res.redirect('/movie/' + req.body.movieID);
   });
 };
-
-function handleValidationErrors(error, body){
-  for(field in error.errors){
-    switch(error.errors[field].path){
-      case 'name':
-        body['nameError'] = error.errors[field].message;
-        break;
-      case 'description':
-        body['descriptionError'] = error.errors[field].message;
-        break;
-    }
-  }
-}
