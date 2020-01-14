@@ -7,9 +7,9 @@ const commentController = require('../controllers/comment.controller');
 // Routes
 
 // router.get('/comment/create', ensureAuthenticated, movieController.createView);
-router.post('/comments/create', commentController.create);
-router.post('/comments/update/:id', commentController.update);
-router.post('/comments/delete/:id', commentController.delete);
+router.post('/comments/create', ensureAuthenticated, commentController.create);
+router.post('/comments/update/:id', ensureAuthenticated, commentController.update);
+router.post('/comments/delete/:id', ensureAuthenticated, commentController.delete);
 
 //Access Control
 

@@ -92,6 +92,8 @@ exports.logout = (req, res, next) => {
   if(!req.isAuthenticated()){
     req.flash('notLoggedIn', "Please Login.");
     res.redirect('/login');
+
+    return(next);
   }
 
   req.flash('userLoggedOut', 'See Ya Later "' + req.user.username + '".');
@@ -110,7 +112,13 @@ exports.profileView = (req, res, next) => {
       layout: 'main',
       user: user,
     });
-  }).populate('movies').populate('comments');
+  }).populate('movies').populate('comments').populate({
+    path: 'likes',
+    populate:{
+      path: 'movie',
+      model: 'MovieModel',
+    }
+  });
 };
 
 function handleValidationErrors(error, body, confirmPasswordError){

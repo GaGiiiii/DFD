@@ -1,6 +1,7 @@
 const MovieModel = require('../models/movie.model');
 const UserModel = require('../models/user.model');
 const CommentModel = require('../models/comment.model');
+const LikeModel = require('../models/like.model');
 
 
 // Operations
@@ -74,6 +75,7 @@ exports.create = (req, res, next) => {
 exports.read = (req, res, next) => {
   let correctUser = false;
   let alreadyLiked = false;
+  let likeID;
   // res.send('Read Movie.');
   MovieModel.findById(req.params.id, (error, movie) => {
 
@@ -95,12 +97,15 @@ exports.read = (req, res, next) => {
       }
 
       if(req.user){
+        console.log("CAO");
+
         movie.likes.forEach((like) => {
 
           req.user.likes.forEach((userLike) => {
             if(String(like) == String(userLike)){
               alreadyLiked = true;
-              console.log("AAA");
+              likeID = like;
+              console.log(alreadyLiked);
             }
           });    
   
@@ -123,9 +128,11 @@ exports.read = (req, res, next) => {
         updatedComment: req.flash('updatedComment'),
         deletedComment: req.flash('deletedComment'),
         createdLike: req.flash('createdLike'),
+        deletedLike: req.flash('deletedLike'),
         user: user,
         correctUser: correctUser,
         alreadyLiked: alreadyLiked,
+        likeID: likeID,
       });
     });
 
@@ -133,7 +140,11 @@ exports.read = (req, res, next) => {
     path: 'comments',
     populate:{
       path: 'author',
-      model: 'UserModel'
+      model: 'UserModel',
+      populate: {
+        path: 'likes',
+        model: 'LikeModel'
+      }
     }
   });
 };
@@ -212,6 +223,26 @@ exports.delete = (req, res, next) => {
     if(error){
       return next(error);
     }
+
+    LikeModel.find((error, likes) => {
+      likes.forEach((like) => {
+        if(String(like.movie) == String(req.params.id)){
+
+          // Pre Brisanja Likea Moramo Iz User Likes Arraya Da Izbrisemo Like
+
+          UserModel.findById(like.author, (error, user) => {
+            if(error)
+              return next(error);
+              
+              user.likes.pull({_id: like._id});
+              user.save(); 
+          });
+
+          like.remove();
+        }
+      })
+    });
+
 
     // Moram Izbrisati Iz User Movies Ovaj Movie I Sve Komentare Vezane Za Taj Film Kao i Kad Brisem Komentare Onda I Iz Usera Moram Komentare || Ovo mora da moze lakse
 

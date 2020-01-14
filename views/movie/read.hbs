@@ -22,6 +22,10 @@
           <div class="alert alert-success mb-5">{{createdLike}}</div>
         {{/if}}
 
+        {{#if deletedLike}}
+          <div class="alert alert-success mb-5">{{deletedLike}}</div>
+        {{/if}}
+
         <div class="card-border">
 
           {{#if notAuthorized}}
@@ -38,36 +42,35 @@
             <p class="card-text">{{movie.description}}</p>
             <br><i class="far fa-user"></i> Suggested By:  <a href="/users/{{user._id}}">{{user.username}}</a> 
             <br><i class="far fa-comments"></i> Comments: {{movie.comments.length}}
-          </div>
-          <div class="card-body">
+            <br><i class="far fa-heart"></i> Likes: {{movie.likes.length}}
+            <br><br>
+
             {{#if loggedInUser}}
               {{#if correctUser}}
                   <a href="/movie/update/{{movie._id}}" class="card-link btn btn-warning"><i class="far fa-edit"></i> Edit</a>
-                  <button data-toggle="modal" data-target="#deleteModal" class="card-link btn btn-danger mr-3"><i class="far fa-trash-alt"></i> Delete</button>
+                  <button data-toggle="modal" data-target="#deleteModal" class="card-link btn btn-danger mr-4"><i class="far fa-trash-alt"></i> Delete</button>
               {{/if}}
             {{/if}}
 
             {{!-- Ako Nije Ulogovan Izbaci Mu Modal --}}
 
             {{#unless loggedInUser}}
-              <button data-toggle="modal" data-target="#likeModal" class="card-link btn btn-secondary mr-3"><i class="fa fa-heart"></i> Like</button>
+              <button data-toggle="modal" data-target="#likeModal" class="card-link btn btn-outline-danger" style="display: block;"><i class="fa fa-heart"></i> Like</button>
             {{/unless}}
 
             {{#if loggedInUser}}
 
               {{#if alreadyLiked}}
-                <form action="/movie/{{movie._id}}/likes/delete/{{this._id}}" method="POST" style="display: inline-block;">
+                <form action="/movie/{{movie._id}}/likes/delete/{{likeID}}" method="POST" style="display: inline-block;">
                   <button type="submit" class="card-link btn btn-danger"><i class="fa fa-heart"></i> Liked</button>
                 </form>
               {{else}}
                 <form action="/movie/{{movie._id}}/likes/create" method="POST" style="display: inline-block;">
-                  <button type="submit" class="card-link btn btn-secondary"><i class="fa fa-heart"></i> Like</button>
+                  <button type="submit" class="card-link btn btn-outline-danger"><i class="fa fa-heart"></i> Like</button>
                 </form>
               {{/if}}
 
             {{/if}}
-
-              
           </div>
 
           <div class="card-footer text-muted" id="dateID">
@@ -109,7 +112,7 @@
       </div>
       <div class="modal-footer">
         <a href="/login"><button type="submit" class="card-link btn btn-primary">Login</button></a>
-        <a href="/register"><button type="button" class="btn btn-secondary">Register</button></a>
+        <a href="/register"><button type="button" class="btn btn-outline-primary">Register</button></a>
       </div>
     </div>
   </div>
@@ -142,7 +145,7 @@
                         <a class="float-right btn text-white btn-warning btn-sm mr-2" name="{{../this._id}}" role="button" data-toggle="collapse" href="#collapseEdit{{../this._id}}" aria-expanded="false" aria-controls="collapse{{../this._id}}"><i class="far fa-edit"></i> Edit</a> 
                         {{/ifEqualsString}}
                       {{/if}}
-                      <a class="float-right btn text-white btn-danger btn-sm mr-2"><i class="fa fa-heart"></i> Like</a>
+                      {{!-- <a class="float-right btn text-white btn-danger btn-sm mr-2"><i class="fa fa-heart"></i> Like</a> --}}
                   </p>
                 </div>
             </div>
