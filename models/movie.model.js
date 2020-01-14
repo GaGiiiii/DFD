@@ -28,16 +28,11 @@ let movieSchema = new Schema({
     comments: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'CommentModel'
+    }],
+    likes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'LikeModel'
     }]
-    /*likes{
-
-    },
-    dislikes{
-
-    },
-    comments{
-
-    }*/
 });
 
 // Export the model

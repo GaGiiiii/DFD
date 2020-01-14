@@ -18,6 +18,7 @@ const app = express();
 const movieRoutes = require('./routes/movie.route');
 const userRoutes = require('./routes/user.route');
 const commentRoutes = require('./routes/comment.route');
+const likeRoutes = require('./routes/like.route');
 
 
 // Set Up Mongoose Connection
@@ -75,6 +76,7 @@ app.get('*', (req, res, next) => {
 app.use("/", movieRoutes);
 app.use('/', userRoutes);
 app.use('/', commentRoutes);
+app.use('/', likeRoutes);
 
 // Server Start
 let portNumber = process.env.PORT || 3000;

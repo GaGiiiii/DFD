@@ -18,6 +18,10 @@
           <div class="alert alert-success mb-5">{{deletedComment}}</div>
         {{/if}}
 
+        {{#if createdLike}}
+          <div class="alert alert-success mb-5">{{createdLike}}</div>
+        {{/if}}
+
         <div class="card-border">
 
           {{#if notAuthorized}}
@@ -35,14 +39,37 @@
             <br><i class="far fa-user"></i> Suggested By:  <a href="/users/{{user._id}}">{{user.username}}</a> 
             <br><i class="far fa-comments"></i> Comments: {{movie.comments.length}}
           </div>
-          {{#if loggedInUser}}
-            {{#if correctUser}}
-              <div class="card-body">
-                <a href="/movie/update/{{movie._id}}" class="card-link btn btn-warning"><i class="far fa-edit"></i> Edit</a>
-                <button data-toggle="modal" data-target="#deleteModal" class="card-link btn btn-danger"><i class="far fa-trash-alt"></i> Delete</button>
-              </div>
+          <div class="card-body">
+            {{#if loggedInUser}}
+              {{#if correctUser}}
+                  <a href="/movie/update/{{movie._id}}" class="card-link btn btn-warning"><i class="far fa-edit"></i> Edit</a>
+                  <button data-toggle="modal" data-target="#deleteModal" class="card-link btn btn-danger mr-3"><i class="far fa-trash-alt"></i> Delete</button>
+              {{/if}}
             {{/if}}
-          {{/if}}
+
+            {{!-- Ako Nije Ulogovan Izbaci Mu Modal --}}
+
+            {{#unless loggedInUser}}
+              <button data-toggle="modal" data-target="#likeModal" class="card-link btn btn-secondary mr-3"><i class="fa fa-heart"></i> Like</button>
+            {{/unless}}
+
+            {{#if loggedInUser}}
+
+              {{#if alreadyLiked}}
+                <form action="/movie/{{movie._id}}/likes/delete/{{this._id}}" method="POST" style="display: inline-block;">
+                  <button type="submit" class="card-link btn btn-danger"><i class="fa fa-heart"></i> Liked</button>
+                </form>
+              {{else}}
+                <form action="/movie/{{movie._id}}/likes/create" method="POST" style="display: inline-block;">
+                  <button type="submit" class="card-link btn btn-secondary"><i class="fa fa-heart"></i> Like</button>
+                </form>
+              {{/if}}
+
+            {{/if}}
+
+              
+          </div>
+
           <div class="card-footer text-muted" id="dateID">
             {{movie.created_at}}
           </div>
@@ -66,6 +93,23 @@
           <button type="submit" class="card-link btn btn-danger">Yes</button>
         </form> 
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="likeModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">You Need To Login To Be Able To Like Movies</strong></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <a href="/login"><button type="submit" class="card-link btn btn-primary">Login</button></a>
+        <a href="/register"><button type="button" class="btn btn-secondary">Register</button></a>
       </div>
     </div>
   </div>

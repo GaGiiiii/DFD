@@ -1,6 +1,7 @@
 const MovieModel = require('../models/movie.model');
 const UserModel = require('../models/user.model');
 const CommentModel = require('../models/comment.model');
+const LikeModel = require('../models/like.model');
 
 
 // Operations
@@ -25,55 +26,41 @@ exports.getAll = function (req, res) {
   }).populate('author');
 };
 
-exports.createView = (req, res) => {
-  res.render('movie/createORupdate' ,{
-    title: 'Suggest New Movie',
-    layout: 'main'
-  });
-};
-
 exports.create = (req, res, next) => {
-  // res.send("ouuu shit");
-  let movie = new MovieModel({
-    name: req.body.name,
-    description: req.body.description,
-    image: req.body.image,
-    author: req.user._id
-  });
-
-  
-
-  movie.save((error) => {
-    if(!error){
-
-      UserModel.findById(movie.author, (error, user) => {
-        if(error)
-          return next(error);
-    
-        user.movies.push(movie._id);
-        user.save();    
+    let like = new LikeModel({
+        author: req.user._id,
+        movie: req.params.id
       });
-
-      req.flash('createdMovie', 'Movie "' + req.body.name + '" Successfully Suggested.')
-      res.redirect('/');
-    }else{
-      if(error.name == 'ValidationError'){
-        handleValidationErrors(error, req.body);
-        res.render("movie/createORupdate", {
-          title: "Suggest New Movie",
-          movie: req.body,
-          userLel: req.user
-        });
-      }
-      else
-        console.log("Error: " + error);
-    }
-  });
+    
+      like.save((error) => {
+        if(!error){
+    
+          UserModel.findById(like.author, (error, user) => {
+            if(error)
+              return next(error);
+        
+            user.likes.push(like._id);
+            user.save();    
+          });
+    
+          MovieModel.findById(like.movie, (error, movie) => {
+            if(error)
+              return next(error);
+        
+            movie.likes.push(like._id);
+            movie.save();    
+          });
+    
+          req.flash('createdLike', 'Movie Liked.')
+          res.redirect('/movie/' + req.params.id);
+        }else{
+            return next(error);
+        }
+      });
 };
 
 exports.read = (req, res, next) => {
   let correctUser = false;
-  let alreadyLiked = false;
   // res.send('Read Movie.');
   MovieModel.findById(req.params.id, (error, movie) => {
 
@@ -94,21 +81,6 @@ exports.read = (req, res, next) => {
         // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
       }
 
-      if(req.user){
-        movie.likes.forEach((like) => {
-
-          req.user.likes.forEach((userLike) => {
-            if(String(like) == String(userLike)){
-              alreadyLiked = true;
-              console.log("AAA");
-            }
-          });    
-  
-        });
-      }
-
-     
-
       // CommentModel.find((error, comments) => {
 
       // })
@@ -122,10 +94,8 @@ exports.read = (req, res, next) => {
         createdComment: req.flash('createdComment'),
         updatedComment: req.flash('updatedComment'),
         deletedComment: req.flash('deletedComment'),
-        createdLike: req.flash('createdLike'),
         user: user,
         correctUser: correctUser,
-        alreadyLiked: alreadyLiked,
       });
     });
 
@@ -137,75 +107,6 @@ exports.read = (req, res, next) => {
     }
   });
 };
-
-exports.updateView = (req, res, next) => {
-  MovieModel.findById(req.params.id, (error, movie) => {
-    if(error){
-      return next(error);
-    }
-
-    // console.log("\n\n\nMOVIE: " + movie.author + ".");
-    // console.log("AUTHOR: " + req.user._id + ".\n\n\n\n");
-
-    let omg1 = String (movie.author);
-    let omg2 = String(req.user._id);
-
-    if(omg1 == omg2){
-      // console.log("DSADSADAS");
-    }
-
-    if(omg1 != omg2){
-      req.flash('notAuthorized', 'Not Authorized.');
-      res.redirect('/movie/' + movie._id);
-    }else{
-      res.render('movie/createORupdate', {
-        title: 'Update Movie "' + movie.name + '".',
-        layout: 'main',
-        movie: movie,
-        updating: true,
-      });
-    }
-  });
-};
-
-exports.update = (req, res, next) => {
-  MovieModel.findByIdAndUpdate(req.params.id, {
-    $set: req.body
-  }, (error, movie) => {
-    if(error)
-      return next(error);
-    
-    req.flash('updatedMovie', 'Movie "' + req.body.name + '" Successfully Updated.')
-    res.redirect('/movie/' + req.params.id);
-  });
-};
-
-// exports.update = (req, res) => {
-//   MovieModel.findOneAndUpdate({
-//     _id: req.body._id,
-//   }, req.body, {
-//       new: true,
-//       runValidators: true
-//   }, (error, movie) => {
-
-//     console.log(movie);
-//     if(!error){
-//       req.flash('updatedMovie', 'Movie "' + req.body.name + '" Successfully Updated.')
-//       res.redirect('/movie/' + req.params.id);
-//     }else{
-//       if(error.name == "ValidationError"){
-//         handleValidationErrors(error, req.body);
-//         res.render("movie/createORupdate", {
-//           title: 'Update Movie "' + req.body.name + '".',
-//           movie: movie,
-//           updating: true
-//         });
-//       }else{
-//         console.log("Error: " + error);
-//       }
-//     }
-//   });
-// };
 
 exports.delete = (req, res, next) => {
   MovieModel.findByIdAndRemove(req.params.id, (error, movie) => {
