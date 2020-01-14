@@ -33,3 +33,42 @@ a.card-header-link:hover{
   }
 }
 
+/* TOOLTIP */
+
+.tooltip2 {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip2 .tooltiptext2 {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  top: 120%;
+  left: 30%;
+  margin-left: -60px;
+}
+
+.tooltip2:hover{
+  cursor: not-allowed;
+}
+
+.tooltip2:hover .tooltiptext2 {
+  visibility: visible;
+}
+
+@media only screen and (max-width: 991px){
+  .tooltip2 .tooltiptext2 {
+    top: 120%;
+    left: 50%;
+  }
+}
