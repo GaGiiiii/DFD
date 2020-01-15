@@ -20,7 +20,7 @@
         <br>Comments By "{{user.username}}": <br>
 
         {{#each user.comments}}
-          <a href="/movie/{{this.movie}}" style="text-decoration: none;">&nbsp; &nbsp; &bull; &nbsp;{{this.body}}</a><br>
+          <a href="/movie/{{this.movie}}/comment/{{this._id}}" style="text-decoration: none;">&nbsp; &nbsp; &bull; &nbsp;{{this.body}}</a><br>
         {{/each}}
       
       {{/if}}

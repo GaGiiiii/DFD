@@ -1,3 +1,5 @@
+{{!-- {{log commentID}} --}}
+
 <div class="container-fluid container-max-width mt-5">
   <div class="row" id="row-for-movie-cards">
 
@@ -124,7 +126,7 @@
 
   {{#each movie.comments}}
 	
-    <div class="card">
+    <div class="card" id="{{this._id}}">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-2">

@@ -149,6 +149,85 @@ exports.read = (req, res, next) => {
   });
 };
 
+exports.readComment = (req, res, next) => {
+  let correctUser = false;
+  let alreadyLiked = false;
+  let likeID;
+  let commentID = req.params.commentID;
+  // res.send('Read Movie.');
+  MovieModel.findById(req.params.id, (error, movie) => {
+
+    if(error){
+      return next(error);
+    }
+
+    UserModel.findById(movie.author, (error, user) => {
+      if(error)
+        return next(error);
+
+
+      // console.log("REQ: " + req.user);
+      // console.log("U: " + user);
+      
+      if(req.user && user && String(req.user._id) == String(user._id)){
+        correctUser = true
+        // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
+      }
+
+      if(req.user){
+        // console.log("CAO");
+
+        movie.likes.forEach((like) => {
+
+          req.user.likes.forEach((userLike) => {
+            if(String(like) == String(userLike)){
+              alreadyLiked = true;
+              likeID = like;
+              // console.log(alreadyLiked);
+            }
+          });    
+  
+        });
+      }
+
+     
+
+      // CommentModel.find((error, comments) => {
+
+      // })
+
+      // console.log(correctUser)
+      res.render('movie/read' , {
+        layout: 'main',
+        movie: movie,
+        updatedMovie: req.flash('updatedMovie'),
+        notAuthorized: req.flash('notAuthorized'),
+        createdComment: req.flash('createdComment'),
+        updatedComment: req.flash('updatedComment'),
+        deletedComment: req.flash('deletedComment'),
+        createdLike: req.flash('createdLike'),
+        deletedLike: req.flash('deletedLike'),
+        user: user,
+        correctUser: correctUser,
+        alreadyLiked: alreadyLiked,
+        likeID: likeID,
+        commentID: commentID,
+      });
+    });
+
+  }).populate({
+    path: 'comments',
+    populate:{
+      path: 'author',
+      model: 'UserModel',
+      populate: {
+        path: 'likes',
+        model: 'LikeModel'
+      }
+    }
+  });
+};
+
 exports.updateView = (req, res, next) => {
   MovieModel.findById(req.params.id, (error, movie) => {
     if(error){

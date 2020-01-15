@@ -95,3 +95,21 @@ function validateEditCommentForm(form){
   }
 
 }
+
+let pathname = window.location.pathname; // Returns path only (/path/example.html)
+let url      = window.location.href;     // Returns full URL (https://example.com/path/example.html)
+let origin   = window.location.origin;   // Returns base URL (https://example.com)
+
+let res = pathname.split("/");
+let commentID = res[4];
+// alert(res[4]);
+// alert(pathname)
+if(commentID){
+  $('html, body').animate({
+    scrollTop: $("#" + commentID).offset().top
+  }, 1000);
+
+  $("#" + commentID).css({"border": "2px solid black"});
+}
+
+
