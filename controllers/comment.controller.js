@@ -13,10 +13,10 @@ exports.create = (req, res, next) => {
     movie: req.body.movieID
   });
 
-  comment.save((error) => {
+  comment.save(async (error) => {
     if(!error){
 
-      UserModel.findById(comment.author, (error, user) => {
+      await UserModel.findById(comment.author, (error, user) => {
         if(error)
           return next(error);
     
@@ -24,7 +24,7 @@ exports.create = (req, res, next) => {
         user.save();    
       });
 
-      MovieModel.findById(comment.movie, (error, movie) => {
+      await MovieModel.findById(comment.movie, (error, movie) => {
         if(error)
           return next(error);
     

@@ -97,7 +97,7 @@ exports.read = (req, res, next) => {
       }
 
       if(req.user){
-        console.log("CAO");
+        // console.log("CAO");
 
         movie.likes.forEach((like) => {
 
@@ -105,7 +105,7 @@ exports.read = (req, res, next) => {
             if(String(like) == String(userLike)){
               alreadyLiked = true;
               likeID = like;
-              console.log(alreadyLiked);
+              // console.log(alreadyLiked);
             }
           });    
   

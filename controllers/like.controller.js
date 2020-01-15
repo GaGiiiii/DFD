@@ -12,10 +12,10 @@ exports.create = (req, res, next) => {
         movie: req.params.id
       });
     
-      like.save((error) => {
+      like.save(async (error) => {
         if(!error){
     
-          UserModel.findById(like.author, (error, user) => {
+         await UserModel.findById(like.author, (error, user) => {
             if(error)
               return next(error);
         
@@ -23,7 +23,7 @@ exports.create = (req, res, next) => {
             user.save();    
           });
     
-          MovieModel.findById(like.movie, (error, movie) => {
+          await MovieModel.findById(like.movie, (error, movie) => {
             if(error)
               return next(error);
         
