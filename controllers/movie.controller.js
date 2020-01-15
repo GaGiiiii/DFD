@@ -8,10 +8,10 @@ const LikeModel = require('../models/like.model');
 
 exports.getAll = function (req, res) {
   MovieModel.find((error, movies) => {
-    if(error){
+    if (error) {
       console.log('Error | getAllMovies.' + error);
-    }else{
-      res.render('index' , {
+    } else {
+      res.render('index', {
         layout: 'main',
         createdMovie: req.flash('createdMovie'),
         deletedMovie: req.flash('deletedMovie'),
@@ -27,7 +27,7 @@ exports.getAll = function (req, res) {
 };
 
 exports.createView = (req, res) => {
-  res.render('movie/createORupdate' ,{
+  res.render('movie/createORupdate', {
     title: 'Suggest New Movie',
     layout: 'main'
   });
@@ -35,30 +35,31 @@ exports.createView = (req, res) => {
 
 exports.create = (req, res, next) => {
   // res.send("ouuu shit");
+
   let movie = new MovieModel({
     name: req.body.name,
     description: req.body.description,
-    image: req.body.image,
+    slika: req.body.image,
     author: req.user._id
   });
 
-  
+
 
   movie.save((error) => {
-    if(!error){
+    if (!error) {
 
       UserModel.findById(movie.author, (error, user) => {
-        if(error)
+        if (error)
           return next(error);
-    
+
         user.movies.push(movie._id);
-        user.save();    
+        user.save();
       });
 
       req.flash('createdMovie', 'Movie "' + req.body.name + '" Successfully Suggested.')
       res.redirect('/');
-    }else{
-      if(error.name == 'ValidationError'){
+    } else {
+      if (error.name == 'ValidationError') {
         handleValidationErrors(error, req.body);
         res.render("movie/createORupdate", {
           title: "Suggest New Movie",
@@ -76,50 +77,71 @@ exports.read = (req, res, next) => {
   let correctUser = false;
   let alreadyLiked = false;
   let likeID;
+
+  console.log('');
+  console.log('****************************');
+  console.log('usao u read');
+  console.log(req);
+  console.log('****************************');
   // res.send('Read Movie.');
   MovieModel.findById(req.params.id, (error, movie) => {
 
-    if(error){
+    console.log('');
+    console.log('****************************');
+    console.log('findById');
+    console.log(error);
+    console.log('############################');
+    console.log(movie);
+    console.log(typeof (movie));
+    console.log('****************************');
+
+    if (error) {
       return next(error);
     }
 
     UserModel.findById(movie.author, (error, user) => {
-      if(error)
+      if (error)
         return next(error);
+
+        console.log('');
+  console.log('****************************');
+  console.log('nasao usera');
+  console.log('****************************');
 
 
       // console.log("REQ: " + req.user);
       // console.log("U: " + user);
-      
-      if(req.user && user && String(req.user._id) == String(user._id)){
+
+      if (req.user && user && String(req.user._id) == String(user._id)) {
         correctUser = true
-        // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
       }
 
-      if(req.user){
-        // console.log("CAO");
+      if (req.user) {
+        console.log("CAO");
 
         movie.likes.forEach((like) => {
 
           req.user.likes.forEach((userLike) => {
-            if(String(like) == String(userLike)){
+            if (String(like) == String(userLike)) {
               alreadyLiked = true;
               likeID = like;
+              console.log("like");
               // console.log(alreadyLiked);
             }
-          });    
-  
+          });
+
         });
       }
 
-     
+
 
       // CommentModel.find((error, comments) => {
 
       // })
 
       // console.log(correctUser)
-      res.render('movie/read' , {
+      res.render('movie/read', {
         layout: 'main',
         movie: movie,
         updatedMovie: req.flash('updatedMovie'),
@@ -138,7 +160,7 @@ exports.read = (req, res, next) => {
 
   }).populate({
     path: 'comments',
-    populate:{
+    populate: {
       path: 'author',
       model: 'UserModel',
       populate: {
@@ -157,47 +179,47 @@ exports.readComment = (req, res, next) => {
   // res.send('Read Movie.');
   MovieModel.findById(req.params.id, (error, movie) => {
 
-    if(error){
+    if (error) {
       return next(error);
     }
 
     UserModel.findById(movie.author, (error, user) => {
-      if(error)
+      if (error)
         return next(error);
 
 
       // console.log("REQ: " + req.user);
       // console.log("U: " + user);
-      
-      if(req.user && user && String(req.user._id) == String(user._id)){
+
+      if (req.user && user && String(req.user._id) == String(user._id)) {
         correctUser = true
         // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
       }
 
-      if(req.user){
+      if (req.user) {
         // console.log("CAO");
 
         movie.likes.forEach((like) => {
 
           req.user.likes.forEach((userLike) => {
-            if(String(like) == String(userLike)){
+            if (String(like) == String(userLike)) {
               alreadyLiked = true;
               likeID = like;
               // console.log(alreadyLiked);
             }
-          });    
-  
+          });
+
         });
       }
 
-     
+
 
       // CommentModel.find((error, comments) => {
 
       // })
 
       // console.log(correctUser)
-      res.render('movie/read' , {
+      res.render('movie/read', {
         layout: 'main',
         movie: movie,
         updatedMovie: req.flash('updatedMovie'),
@@ -217,7 +239,7 @@ exports.readComment = (req, res, next) => {
 
   }).populate({
     path: 'comments',
-    populate:{
+    populate: {
       path: 'author',
       model: 'UserModel',
       populate: {
@@ -230,24 +252,24 @@ exports.readComment = (req, res, next) => {
 
 exports.updateView = (req, res, next) => {
   MovieModel.findById(req.params.id, (error, movie) => {
-    if(error){
+    if (error) {
       return next(error);
     }
 
     // console.log("\n\n\nMOVIE: " + movie.author + ".");
     // console.log("AUTHOR: " + req.user._id + ".\n\n\n\n");
 
-    let omg1 = String (movie.author);
+    let omg1 = String(movie.author);
     let omg2 = String(req.user._id);
 
-    if(omg1 == omg2){
+    if (omg1 == omg2) {
       // console.log("DSADSADAS");
     }
 
-    if(omg1 != omg2){
+    if (omg1 != omg2) {
       req.flash('notAuthorized', 'Not Authorized.');
       res.redirect('/movie/' + movie._id);
-    }else{
+    } else {
       res.render('movie/createORupdate', {
         title: 'Update Movie "' + movie.name + '".',
         layout: 'main',
@@ -262,9 +284,9 @@ exports.update = (req, res, next) => {
   MovieModel.findByIdAndUpdate(req.params.id, {
     $set: req.body
   }, (error, movie) => {
-    if(error)
+    if (error)
       return next(error);
-    
+
     req.flash('updatedMovie', 'Movie "' + req.body.name + '" Successfully Updated.')
     res.redirect('/movie/' + req.params.id);
   });
@@ -299,22 +321,22 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   MovieModel.findByIdAndRemove(req.params.id, (error, movie) => {
-    if(error){
+    if (error) {
       return next(error);
     }
 
     LikeModel.find((error, likes) => {
       likes.forEach((like) => {
-        if(String(like.movie) == String(req.params.id)){
+        if (String(like.movie) == String(req.params.id)) {
 
           // Pre Brisanja Likea Moramo Iz User Likes Arraya Da Izbrisemo Like
 
           UserModel.findById(like.author, (error, user) => {
-            if(error)
+            if (error)
               return next(error);
-              
-              user.likes.pull({_id: like._id});
-              user.save(); 
+
+            user.likes.pull({ _id: like._id });
+            user.save();
           });
 
           like.remove();
@@ -326,35 +348,35 @@ exports.delete = (req, res, next) => {
     // Moram Izbrisati Iz User Movies Ovaj Movie I Sve Komentare Vezane Za Taj Film Kao i Kad Brisem Komentare Onda I Iz Usera Moram Komentare || Ovo mora da moze lakse
 
     UserModel.findById(movie.author, (error, user) => {
-      if(error)
+      if (error)
         return next(error);
-  
-        // const index = user.movies.indexOf(req.params.id);
-        // if (index > -1) {
-        //   user.movies.splice(index, 1);
-        // }
 
-      user.movies.pull({_id: req.params.id});
-      user.save(); 
+      // const index = user.movies.indexOf(req.params.id);
+      // if (index > -1) {
+      //   user.movies.splice(index, 1);
+      // }
+
+      user.movies.pull({ _id: req.params.id });
+      user.save();
     });
 
     CommentModel.find((error, comments) => {
       comments.forEach((comment) => {
-        if(String(comment.movie) == String(req.params.id)){
+        if (String(comment.movie) == String(req.params.id)) {
           // Pre Brisanja Komentara Moramo Iz User Comments Arraya Da Izbrisemo Comment
 
           UserModel.findById(comment.author, (error, user) => {
-            if(error)
+            if (error)
               return next(error);
-        
-              // const index = user.comments.indexOf(comment._id);
-              // if (index > -1) {
-              //   user.comments.splice(index, 1);
-              // }
-            
-              
-              user.comments.pull({_id: comment._id});
-              user.save(); 
+
+            // const index = user.comments.indexOf(comment._id);
+            // if (index > -1) {
+            //   user.comments.splice(index, 1);
+            // }
+
+
+            user.comments.pull({ _id: comment._id });
+            user.save();
           });
 
           comment.remove();
@@ -367,9 +389,9 @@ exports.delete = (req, res, next) => {
   });
 };
 
-function handleValidationErrors(error, body){
-  for(field in error.errors){
-    switch(error.errors[field].path){
+function handleValidationErrors(error, body) {
+  for (field in error.errors) {
+    switch (error.errors[field].path) {
       case 'name':
         body['nameError'] = error.errors[field].message;
         break;

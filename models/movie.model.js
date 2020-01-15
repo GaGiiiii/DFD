@@ -14,7 +14,7 @@ let movieSchema = new Schema({
       maxlength: [500, "Description Can't Be Longer Than 30 Characters"],
       required: [true, "Description Field Is Required"]
     },
-    image: { // TODO
+    slika: { // TODO
       type: String
     },
     created_at: {
