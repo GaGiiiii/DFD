@@ -73,20 +73,37 @@ exports.create = (req, res, next) => {
 };
 
 exports.read = (req, res, next) => {
+
+  // console.log("\n\n\n\n\n******************************")
+  // console.log("USAO U READ")
+  // console.log("******************************")
+
   let correctUser = false;
   let alreadyLiked = false;
   let likeID;
-  // res.send('Read Movie.');
   MovieModel.findById(req.params.id, (error, movie) => {
+
+    // console.log("******************************")
+    // console.log("MOVIE FIND")
+    // console.log(movie);
+    // console.log("******************************")
+
+    if(!movie)
+      return next(); // Failed To Cast Ako Nema Slike
 
     if(error){
       return next(error);
     }
 
     UserModel.findById(movie.author, (error, user) => {
+
+      // console.log("******************************")
+      // console.log("USER FIND")
+      // console.log(user);
+      // console.log("******************************")
+      
       if(error)
         return next(error);
-
 
       // console.log("REQ: " + req.user);
       // console.log("U: " + user);
@@ -111,8 +128,6 @@ exports.read = (req, res, next) => {
   
         });
       }
-
-     
 
       // CommentModel.find((error, comments) => {
 
@@ -154,7 +169,7 @@ exports.readComment = (req, res, next) => {
   let alreadyLiked = false;
   let likeID;
   let commentID = req.params.commentID;
-  // res.send('Read Movie.');
+  
   MovieModel.findById(req.params.id, (error, movie) => {
 
     if(error){

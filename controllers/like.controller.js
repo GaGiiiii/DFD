@@ -7,6 +7,8 @@ const LikeModel = require('../models/like.model');
 // Operations
 
 exports.create = (req, res, next) => {
+    let movieName;
+
     let like = new LikeModel({
         author: req.user._id,
         movie: req.params.id
@@ -27,11 +29,12 @@ exports.create = (req, res, next) => {
             if(error)
               return next(error);
         
+            movieName = movie.name;
             movie.likes.push(like._id);
             movie.save();    
           });
     
-          req.flash('createdLike', 'Movie Liked.')
+          req.flash('createdLike', 'Movie "' + movieName + '" Liked.');
           res.redirect('/movie/' + req.params.id);
         }else{
             return next(error);
@@ -40,14 +43,16 @@ exports.create = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  LikeModel.findByIdAndRemove(req.params.likeid, (error, like) => {
+  let movieName;
+
+  LikeModel.findByIdAndRemove(req.params.likeid, async (error, like) => {
     if(error){
       return next(error);
     }
 
     // Moram Izbrisati Iz User Movies Ovaj Movie I Sve Komentare Vezane Za Taj Film Kao i Kad Brisem Komentare Onda I Iz Usera Moram Komentare || Ovo mora da moze lakse
 
-    UserModel.findById(like.author, (error, user) => {
+    await UserModel.findById(like.author, (error, user) => {
       if(error)
         return next(error);
   
@@ -60,7 +65,7 @@ exports.delete = (req, res, next) => {
       user.save(); 
     });
 
-    MovieModel.findById(like.movie, (error, movie) => {
+    await MovieModel.findById(like.movie, (error, movie) => {
       if(error)
         return next(error);
   
@@ -69,11 +74,12 @@ exports.delete = (req, res, next) => {
         //   user.movies.splice(index, 1);
         // }
 
+      movieName = movie.name;
       movie.likes.pull({_id: req.params.likeid});
       movie.save(); 
     });
 
-    req.flash('deletedLike', 'Movie Unliked.');
+    req.flash('deletedLike', 'Movie "' + movieName + '" Unliked.');
     res.redirect('/movie/' + req.params.id);
   });
 };
