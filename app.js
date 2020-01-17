@@ -1,4 +1,5 @@
-// Dependencies
+/* ********** DEPENDENCIES ********** */
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -11,17 +12,20 @@ const passport = require('passport');
 const config = require('./config/database');
 
 
-// Initialize Express App
+/* ********** INITIALIZE EXPRESS APP ********** */
+
 const app = express();
 
-// Imports Routes For The Movies
+/* ********** IMPORT ROUTES ********** */
+
 const movieRoutes = require('./routes/movie.route');
 const userRoutes = require('./routes/user.route');
 const commentRoutes = require('./routes/comment.route');
 const likeRoutes = require('./routes/like.route');
 
 
-// Set Up Mongoose Connection
+/* ********** MONGOOSE ********** */
+
 let dev_db_url = config.database;
 const mongoDB = process.env.MONGODB_URI || dev_db_url;
 mongoose.connect(mongoDB, {
@@ -32,7 +36,8 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, '\n\n *** MongoDB connection error:'));
 
-// App Use
+/* ********** APP USE ********** */
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
@@ -42,13 +47,13 @@ app.use(session({
   saveUninitialized: true
 }));
 app.use(flash());
-
 // app.use(express.static(__dirname + '/public/'));
 app.use('*/images', express.static(path.join(__dirname, 'public/images')));
 app.use('*/js', express.static(path.join(__dirname, 'public/js')));
 app.use('*/css', express.static(path.join(__dirname, 'public/css')));
 
-// App Set
+/* ********** APP SET ********** */
+
 app.set('views', path.join(__dirname, '/views/'));
 app.engine('.hbs', expressHandlebars({
   extname: '.hbs',
@@ -63,7 +68,8 @@ app.engine('.hbs', expressHandlebars({
 app.set('view engine', '.hbs');
 // app.set('views', path.join(__dirname, 'views'));
 
-// Passport
+/* ********** PASSPORT ********** */
+
 require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
@@ -78,7 +84,8 @@ app.use('/', userRoutes);
 app.use('/', commentRoutes);
 app.use('/', likeRoutes);
 
-// Server Start
+/* ********** SERVER START ********** */
+
 let portNumber = process.env.PORT || 3000;
 
 app.listen(portNumber, () => {
