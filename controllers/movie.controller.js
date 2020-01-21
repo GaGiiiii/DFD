@@ -14,6 +14,11 @@ const LikeModel = require('../models/like.model');
             if(error){
               console.log('Error | getAllMovies.' + error);
             }else{
+
+              let options = { year: 'numeric', month: 'long', day: 'numeric' };
+              let date = movie.created_at;
+              date = date.toLocaleDateString("en-US", options)
+
               res.render('index' , {
                 layout: 'main',
                 createdMovie: req.flash('createdMovie'),
@@ -145,9 +150,14 @@ const LikeModel = require('../models/like.model');
                 });
               }
 
+              let options = { year: 'numeric', month: 'long', day: 'numeric' };
+              let date = movie.created_at;
+              date = date.toLocaleDateString("en-US", options)
+
               res.render('movie/read' , {
                 layout: 'main',
                 movie: movie,
+                date: date,
                 updatedMovie: req.flash('updatedMovie'),
                 notAuthorized: req.flash('notAuthorized'),
                 createdComment: req.flash('createdComment'),
