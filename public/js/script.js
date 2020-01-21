@@ -1,3 +1,13 @@
+// function formatDate(oldDate){
+//   let options = { year: 'numeric', month: 'long', day: 'numeric' };
+//   // let date = movie.created_at;
+//   console.log(oldDate);
+
+//   newDate = Date(oldDate).toLocaleDateString("en-US", options);
+
+//   return newDate;
+// }
+
 // let DateDiff = {
 
 //   inDays: function(d1, d2) {
@@ -28,7 +38,17 @@
 //   }
 // }
 
-// let dateDIV = document.querySelector('#dateID');
+
+// let dateDIVs = document.querySelectorAll('.dateDIVClass');
+
+// dateDIVs.forEach((dateDIV) => {
+  // let oldDate = dateDIV.innerHTML;
+  // let newDate = formatDate(oldDate);
+  // zika = peraa(pera);
+  // console.log(newDate);
+  // dateDIV.innerHTML = zika;
+// });
+// console.log(dateDIVs[0].innerText);
 // let dString = dateDIV.innerHTML;
 // let d1 = new Date(dString);
 // let d2 = new Date();

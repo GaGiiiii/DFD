@@ -15,9 +15,14 @@ const LikeModel = require('../models/like.model');
               console.log('Error | getAllMovies.' + error);
             }else{
 
+              let dates = new Array();
               let options = { year: 'numeric', month: 'long', day: 'numeric' };
-              let date = movie.created_at;
-              date = date.toLocaleDateString("en-US", options)
+
+              movies.forEach((movie) => {
+                let date = movie.created_at;
+                date = date.toLocaleDateString("en-US", options);
+                dates.push(date);
+              });
 
               res.render('index' , {
                 layout: 'main',
@@ -29,6 +34,7 @@ const LikeModel = require('../models/like.model');
                 message: req.flash('error'),
                 success: req.flash('success'),
                 movies: movies,
+                dates: dates
               });
             }
           }).populate('author');
@@ -152,7 +158,7 @@ const LikeModel = require('../models/like.model');
 
               let options = { year: 'numeric', month: 'long', day: 'numeric' };
               let date = movie.created_at;
-              date = date.toLocaleDateString("en-US", options)
+              date = date.toLocaleDateString("en-US", options);
 
               res.render('movie/read' , {
                 layout: 'main',
@@ -224,9 +230,14 @@ const LikeModel = require('../models/like.model');
                 });
               }
 
+              let options = { year: 'numeric', month: 'long', day: 'numeric' };
+              let date = movie.created_at;
+              date = date.toLocaleDateString("en-US", options)
+
               res.render('movie/read' , {
                 layout: 'main',
                 movie: movie,
+                date: date,
                 updatedMovie: req.flash('updatedMovie'),
                 notAuthorized: req.flash('notAuthorized'),
                 createdComment: req.flash('createdComment'),
