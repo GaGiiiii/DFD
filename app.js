@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const expressHandlebars = require('express-handlebars');
+const Handlebars = require('handlebars')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const session = require('express-session');
 const flash = require('req-flash');
 const cookieParser = require('cookie-parser');
@@ -31,7 +33,8 @@ const mongoDB = process.env.MONGODB_URI || dev_db_url;
 mongoose.connect(mongoDB, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-});
+}).then(() => console.log('Connected')).
+  catch(err => console.log('Caught', err.stack));
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, '\n\n *** MongoDB connection error:'));
@@ -39,7 +42,7 @@ db.on('error', console.error.bind(console, '\n\n *** MongoDB connection error:')
 /* ********** APP USE ********** */
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
   secret: 'yourMOM',
@@ -63,7 +66,8 @@ app.engine('.hbs', expressHandlebars({
     ifEqualsString: (arg1, arg2, options) => {
       return (String(arg1) == String(arg2)) ? options.fn(this) : options.inverse(this);
     }
-  }
+  },
+  handlebars: allowInsecurePrototypeAccess(Handlebars),
 }));
 app.set('view engine', '.hbs');
 // app.set('views', path.join(__dirname, 'views'));
@@ -89,7 +93,7 @@ app.use('/', likeRoutes);
 let portNumber = process.env.PORT || 3000;
 
 app.listen(portNumber, () => {
-    console.log("*** Server is running on port: " + portNumber);
+  console.log("*** Server is running on port: " + portNumber);
 });
 
 

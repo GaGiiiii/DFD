@@ -1,6 +1,6 @@
 /* ********** DB CONFIG ********** */
 
 module.exports = {
-  database: 'mongodb://admin:admin123@ds135068.mlab.com:35068/dfd',
+  database: 'mongodb+srv://admin:admin123@clusterdfd.oejpt.mongodb.net/ClusterDFD?retryWrites=true&w=majority',
   secret: 'dfd'
 }
